@@ -1,0 +1,22 @@
+{
+  "name": "stock-trader",
+  "version": "1.0.0",
+  "description": "A stock trading webapp for the NYCTTP code challenge",
+  "engines": {
+    "node": ">= 7.0.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build-client": "webpack",
+    "build-client-watch": "webpack -w"
+  },
+  "dependencies": {
+    "compression": "^1.7.3",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {}
+}
