@@ -8,7 +8,12 @@
   "main": "index.js",
   "scripts": {
     "build-client": "webpack",
-    "build-client-watch": "webpack -w"
+    "build-client-watch": "webpack -w",
+    "seed": "node script/seed.js",
+    "start": "node server",
+    "start-dev": "NODE_ENV='development' npm run build-client-watch & NODE_ENV='development' npm run start-server",
+    "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
+    "test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./client/**/*.spec.js\" \"./script/**/*.spec.js\" --require @babel/polyfill --require @babel/register"
   },
   "dependencies": {
     "compression": "^1.7.3",
@@ -17,7 +22,9 @@
     "express-session": "^1.15.6",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "pg": "^7.7.1",
+    "sequelize": "^4.41.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.55",
