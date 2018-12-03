@@ -4,17 +4,22 @@ const morgan = require('morgan');
 const compression = require('compression');
 const session = require('express-session');
 const passport = require('passport');
-const SequelizeStore = require('connect-session-sequelize')(session);
 const db = require('./db');
-const sessionStore = new SequelizeStore({ db });
+// const sessionStore = new SequelizeStore({ db });
 const PORT = process.env.PORT || 8080;
 const app = express();
+const socketio = require('socket.io');
 
 module.exports = app;
 
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const dbStore = new SequelizeStore({ db: db });
+
+dbStore.sync();
+
 //Ensures Mocha quits after tests complete.
 if (process.env.NODE_ENV === 'test') {
-  after('close the session store', () => sessionStore.stopExpiringSessions());
+  after('close the session store', () => session.Store.stopExpiringSessions());
 }
 
 if (process.env.NODE_ENV !== 'production') require('../secrets');
@@ -45,7 +50,7 @@ const createApp = () => {
   app.use(
     session({
       secret: process.env.SESSION_SECRET || 'my best friend is Cody',
-      store: sessionStore,
+      // store: sessionStore,
       resave: false,
       saveUninitialized: false
     })
@@ -85,14 +90,22 @@ const createApp = () => {
 };
 
 const startListening = () => {
-  app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+  const server = app.listen(PORT, () =>
+    console.log(`Server listening on port ${PORT}`)
+  );
+  const io = socketio(server);
+  require('./socket')(io);
 };
 
 async function bootApp() {
-  await sessionStore.sync();
+  await dbStore.sync();
   await db.sync();
   await createApp();
   await startListening();
 }
 
-bootApp();
+if (require.main === module) {
+  bootApp();
+} else {
+  createApp();
+}
