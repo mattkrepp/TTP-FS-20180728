@@ -8,6 +8,11 @@ const Transaction = db.define('transaction', {
   quantity: {
     type: Sequelize.INTEGER,
     allowNull: false
+  },
+  // True if purchasing, false if selling
+  purchase: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
   }
 });
 

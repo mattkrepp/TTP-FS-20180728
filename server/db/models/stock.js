@@ -13,6 +13,9 @@ const Stock = db.define('stock', {
   price: {
     type: Sequelize.INTEGER,
     allowNull: false
+  },
+  dayOpen: {
+    type: Sequelize.INTEGER
   }
 });
 

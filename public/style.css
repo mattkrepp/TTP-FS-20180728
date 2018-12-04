@@ -1,0 +1,41 @@
+body {
+  font-family: sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+label {
+  display: block;
+}
+
+nav a {
+  display: inline-block;
+  margin: 1em;
+}
+
+form div {
+  margin: 1em;
+  display: inline-block;
+}
+
+.login-group {
+  align-self: flex-end;
+}
+
+.nav-container {
+  height: 70px;
+}
+
+.logo-text {
+  float: left;
+  font-size: 2.75em;
+  padding-top: 0px;
+}
+
+.login-group {
+  float: right;
+  margin-right: 20px;
+  margin-top: 15px;
+}

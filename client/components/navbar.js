@@ -1,32 +1,39 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
-import {logout} from '../store'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { logout } from '../store';
+import { Button } from 'semantic-ui-react';
 
-const Navbar = ({handleClick, isLoggedIn}) => (
+const Navbar = ({ handleClick, isLoggedIn }) => (
   <div>
-    <h1>BOILERMAKER</h1>
-    <nav>
+    <nav className="nav-container">
+      <Link to="/home">
+        <h2 className="logo-text">STOCKIFY</h2>
+      </Link>
       {isLoggedIn ? (
-        <div>
-          {/* The navbar will show these links after you log in */}
-          <Link to="/home">Home</Link>
-          <a href="#" onClick={handleClick}>
+        <div className="login-group">
+          {/* Buttons visible after log in */}
+          <Button color="teal" onClick={handleClick}>
             Logout
-          </a>
+          </Button>
         </div>
       ) : (
-        <div>
-          {/* The navbar will show these links before you log in */}
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
+        <div className="login-group">
+          {/* Buttons visible before log in */}
+          <Link to="/login">
+            <Button color="teal">Login</Button>
+          </Link>
+
+          <Link to="/signup">
+            <Button color="orange">Sign Up</Button>
+          </Link>
         </div>
       )}
     </nav>
     <hr />
   </div>
-)
+);
 
 /**
  * CONTAINER
@@ -34,18 +41,18 @@ const Navbar = ({handleClick, isLoggedIn}) => (
 const mapState = state => {
   return {
     isLoggedIn: !!state.user.id
-  }
-}
+  };
+};
 
 const mapDispatch = dispatch => {
   return {
     handleClick() {
-      dispatch(logout())
+      dispatch(logout());
     }
-  }
-}
+  };
+};
 
-export default connect(mapState, mapDispatch)(Navbar)
+export default connect(mapState, mapDispatch)(Navbar);
 
 /**
  * PROP TYPES
@@ -53,4 +60,4 @@ export default connect(mapState, mapDispatch)(Navbar)
 Navbar.propTypes = {
   handleClick: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired
-}
+};
