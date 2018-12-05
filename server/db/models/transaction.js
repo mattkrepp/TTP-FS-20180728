@@ -3,7 +3,8 @@ const db = require('../db');
 
 const Transaction = db.define('transaction', {
   purchasePrice: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    allowNull: false
   },
   quantity: {
     type: Sequelize.INTEGER,
@@ -13,6 +14,16 @@ const Transaction = db.define('transaction', {
   purchase: {
     type: Sequelize.BOOLEAN,
     defaultValue: true
+  },
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    unique: false
+  },
+  stockId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    unique: false
   }
 });
 

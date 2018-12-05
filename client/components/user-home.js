@@ -11,13 +11,24 @@ class UserHome extends Component {
     this.state = {
       stocks: []
     };
+    this.addStock = this.addStock.bind(this);
   }
 
   async componentDidMount() {
     const res = await Axios.get('/api/stocks/');
-    this.setState({ stocks: res.data });
+    const keys = Object.keys(res.data);
+    let stocksArr = [];
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      stocksArr.push({ ...res.data[key], symbol: key });
+    }
+    this.setState({ stocks: stocksArr });
   }
 
+  addStock(newStock) {
+    let newArr = [...this.state.stocks, newStock];
+    this.setState({ stocks: newArr });
+  }
   render() {
     const { email, balance } = this.props;
     const { stocks } = this.state;
@@ -27,7 +38,7 @@ class UserHome extends Component {
         <h2>My Portfolio</h2>
         <h3>Current Balance: ${(balance / 100).toFixed(2)}</h3>
         <PortfolioList stocks={stocks} />
-        <BuyOrSell />
+        <BuyOrSell addStock={this.addStock} />
       </div>
     );
   }

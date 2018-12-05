@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
-import { Form } from 'semantic-ui-react';
+import { Form, Modal, Header, Icon, Button } from 'semantic-ui-react';
 import Axios from 'axios';
 
 class BuyOrSell extends Component {
   constructor() {
     super();
     this.state = {
-      mode: 'buy'
+      mode: 'buy',
+      symbol: '',
+      quantity: '',
+      modalOpen: false,
+      error: 'Stock Symbol not recognized. Please try again.'
     };
     this.handleToggle = this.handleToggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInput = this.handleInput.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   handleToggle(event, { value }) {
@@ -19,8 +25,22 @@ class BuyOrSell extends Component {
   }
 
   async handleSubmit(event) {
+    const { mode, symbol, quantity } = this.state;
     event.preventDefault();
-    await Axios.post('/api/transaction');
+    try {
+      const res = await Axios.post('/api/transactions', {
+        mode,
+        symbol,
+        quantity
+      });
+      this.props.addStock(res.data);
+      this.setState({ symbol: '', quantity: '' });
+    } catch (err) {
+      this.setState({
+        error: 'Stock Symbol not recognized. Please try again.'
+      });
+      this.openModal();
+    }
   }
 
   handleInput(event) {
@@ -28,6 +48,14 @@ class BuyOrSell extends Component {
       [event.target.name]: event.target.value
     });
     console.log('this.state', this.state);
+  }
+
+  openModal() {
+    this.setState({ modalOpen: true });
+  }
+
+  closeModal() {
+    this.setState({ modalOpen: false });
   }
 
   render() {
@@ -66,6 +94,23 @@ class BuyOrSell extends Component {
         <Form.Button color="teal">
           {this.state.mode === 'buy' ? 'Buy' : 'Sell'}
         </Form.Button>
+        <Modal
+          trigger={this.state.openModal}
+          open={this.state.modalOpen}
+          onClose={this.closeModal}
+          basic
+          size="small"
+        >
+          <Header icon="exclamation" content="Error processing transaction:" />
+          <Modal.Content>
+            <h3>{this.state.error}</h3>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="teal" onClick={this.closeModal} inverted>
+              <Icon name="checkmark" /> Got it
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </Form>
     );
   }
