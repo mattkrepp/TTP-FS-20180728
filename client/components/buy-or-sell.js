@@ -36,8 +36,9 @@ class BuyOrSell extends Component {
       this.props.addStock(res.data);
       this.setState({ symbol: '', quantity: '' });
     } catch (err) {
+      console.log('error response message');
       this.setState({
-        error: 'Stock Symbol not recognized. Please try again.'
+        error: err.response.data.message
       });
       this.openModal();
     }

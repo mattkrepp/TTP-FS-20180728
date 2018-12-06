@@ -9,7 +9,8 @@ class UserHome extends Component {
   constructor() {
     super();
     this.state = {
-      stocks: []
+      stocks: [],
+      balance: 0
     };
     this.addStock = this.addStock.bind(this);
   }
@@ -22,16 +23,20 @@ class UserHome extends Component {
       const key = keys[i];
       stocksArr.push({ ...res.data[key], symbol: key });
     }
-    this.setState({ stocks: stocksArr });
+    this.setState({ stocks: stocksArr, balance: this.props.balance });
   }
 
   addStock(newStock) {
     let newArr = [...this.state.stocks, newStock];
+    const chargeAmount = newStock.price * newStock.quantity;
+    const newBalance = this.props.balance - chargeAmount;
     this.setState({ stocks: newArr });
+    if (newBalance > 0) {
+      this.setState({ balance: newBalance });
+    }
   }
   render() {
-    const { email, balance } = this.props;
-    const { stocks } = this.state;
+    const { balance, stocks } = this.state;
     console.log(stocks);
     return (
       <div>

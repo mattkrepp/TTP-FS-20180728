@@ -48,22 +48,34 @@ router.post('/', async (req, res, next) => {
 
     const purchase = mode === 'buy';
 
+    let user = await User.findById(req.user.id);
+    const purchaseTotal = stock[0].dataValues.price * quantity;
+    const newBalance = user.dataValues.balance - purchaseTotal;
+
+    if (newBalance > 0) {
+      await user.update({ balance: newBalance });
+      const transaction = await Transaction.create({
+        userId: id,
+        stockId: stock[0].dataValues.id,
+        quantity,
+        purchasePrice: stock[0].dataValues.price,
+        purchase
+      });
+
+      res.status(201).send({
+        symbol: stock[0].dataValues.symbol,
+        quantity: transaction.quantity,
+        dayOpen: stock[0].dataValues.dayOpen,
+        price: transaction.purchasePrice
+      });
+    } else {
+      res.status(400).send({ message: 'Insufficient Funds.' });
+    }
     //Creates transaction using db info about stock
-    const transaction = await Transaction.create({
-      userId: id,
-      stockId: stock[0].dataValues.id,
-      quantity,
-      purchasePrice: stock[0].dataValues.price,
-      purchase
-    });
-    res.status(201).send({
-      symbol: stock[0].dataValues.symbol,
-      quantity: transaction.quantity,
-      dayOpen: stock[0].dataValues.dayOpen,
-      price: transaction.purchasePrice
-    });
   } catch (err) {
-    res.status(400).send({ message: 'Not Found' });
+    res
+      .status(400)
+      .send({ message: 'No matching symbols found. Try another query.' });
     next(err);
   }
 });
