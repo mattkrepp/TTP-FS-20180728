@@ -8,3 +8,4 @@ export { default as UserHome } from './user-home';
 export { Login, Signup } from './auth-form';
 export { default as PortfolioList } from './portfolio-list';
 export { default as BuyOrSell } from './buy-or-sell';
+export { default as TransactionsList } from './transactions-list';

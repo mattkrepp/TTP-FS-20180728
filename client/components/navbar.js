@@ -14,6 +14,12 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
       {isLoggedIn ? (
         <div className="login-group">
           {/* Buttons visible after log in */}
+          <Link to="/home">
+            <Button color="orange">Portfolio</Button>
+          </Link>
+          <Link to="/transactions">
+            <Button color="orange">Transactions</Button>
+          </Link>
           <Button color="teal" onClick={handleClick}>
             Logout
           </Button>

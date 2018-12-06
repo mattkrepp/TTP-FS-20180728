@@ -5,10 +5,17 @@ module.exports = router;
 
 router.get('/', async (req, res, next) => {
   try {
-    const users = await User.findAll({
-      attributes: ['id', 'email']
+    let transactions = await Transaction.findAll({
+      where: { userId: req.user.id }
     });
-    res.json(users);
+    for (let i = 0; i < transactions.length; i++) {
+      const stock = await Stock.findById(transactions[i].stockId);
+      transactions[i] = {
+        ...transactions[i].dataValues,
+        symbol: stock.dataValues.symbol
+      };
+    }
+    res.json(transactions);
   } catch (err) {
     next(err);
   }
