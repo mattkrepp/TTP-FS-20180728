@@ -27,17 +27,29 @@ class UserHome extends Component {
   }
 
   addStock(newStock) {
-    let newArr = [...this.state.stocks, newStock];
+    let stockIdx = -1;
+    for (let i = 0; i < this.state.stocks.length; i++) {
+      let currStock = this.state.stocks[i];
+      if (currStock.symbol === newStock.symbol) {
+        stockIdx = i;
+        break;
+      }
+    }
+
+    if (stockIdx === -1) {
+      let newArr = [...this.state.stocks, newStock];
+      this.setState({ stocks: newArr });
+    }
+
     const chargeAmount = newStock.price * newStock.quantity;
     const newBalance = this.props.balance - chargeAmount;
-    this.setState({ stocks: newArr });
+
     if (newBalance > 0) {
       this.setState({ balance: newBalance });
     }
   }
   render() {
     const { balance, stocks } = this.state;
-    console.log(stocks);
     return (
       <div>
         <h2>My Portfolio</h2>
@@ -62,6 +74,6 @@ const mapDispatch = dispatch => {
 
 export default connect(mapState, mapDispatch)(UserHome);
 
-UserHome.propTypes = {
-  email: PropTypes.string
-};
+// UserHome.propTypes = {
+//   email: PropTypes.string
+// };

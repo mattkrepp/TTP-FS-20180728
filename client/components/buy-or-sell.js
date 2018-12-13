@@ -20,7 +20,6 @@ class BuyOrSell extends Component {
   }
 
   handleToggle(event, { value }) {
-    console.log(value);
     this.setState({ mode: value });
   }
 
@@ -36,7 +35,6 @@ class BuyOrSell extends Component {
       this.props.addStock(res.data);
       this.setState({ symbol: '', quantity: '' });
     } catch (err) {
-      console.log('error response message');
       this.setState({
         error: err.response.data.message
       });
@@ -48,7 +46,6 @@ class BuyOrSell extends Component {
     this.setState({
       [event.target.name]: event.target.value
     });
-    console.log('this.state', this.state);
   }
 
   openModal() {
